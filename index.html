@@ -1,0 +1,138 @@
+<style>
+  input[type=text],
+  select,
+  textarea {
+    width: 100%;
+    /* Full width */
+    padding: 12px;
+    /* Some padding */
+    border: 1px solid #ccc;
+    /* Gray border */
+    border-radius: 4px;
+    /* Rounded borders */
+    box-sizing: border-box;
+    /* Make sure that padding and width stays in place */
+    margin-top: 6px;
+    /* Add a top margin */
+    margin-bottom: 16px;
+    /* Bottom margin */
+    resize: vertical
+      /* Allow the user to vertically resize the textarea (not horizontally) */
+  }
+
+  /* Style the submit button with a specific background color etc */
+  input[type=submit] {
+    background-color: #04AA6D;
+    color: white;
+    padding: 12px 20px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+  }
+
+  /* When moving the mouse over the submit button, add a darker green color */
+  input[type=submit]:hover {
+    background-color: #45a049;
+  }
+
+  /* Add a background color and some padding around the form */
+  .container {
+    border-radius: 5px;
+    background-color: #f2f2f2;
+    padding: 20px;
+  }
+
+  .alert{
+    width: 100%;
+    background: rgb(0, 255, 106);
+    padding: 10px 20px;
+    border-radius: 5px;
+    text-align: center;
+    font-size: 18px;
+    font-weight: 900;
+    display: none;
+}
+
+</style>
+<div class="container">
+  <form action="" id="contactForm">
+    <div class="alert">Your message sent</div>
+
+    <label for="name">Name</label>
+    <input type="text" id="name" name="name" placeholder="Your name..">
+
+    <label for="emailid">Email</label>
+    <input type="text" id="emailid" name="email" placeholder="Your email..">
+
+    <label for="subject">Subject</label>
+    <textarea id="msgContent" name="subject" placeholder="Write something.." style="height:200px"></textarea>
+
+    <input type="submit" value="Submit">
+  </form>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/firebase/7.14.1-0/firebase.js"></script>
+<script>
+  const firebaseConfig = {
+
+    apiKey: "AIzaSyBn7mInTR5TS8Q5D2G4UQmyykkIjpzER98",
+
+    authDomain: "html-css-firebase-9ed5a.firebaseapp.com",
+
+    databaseURL: "https://html-css-firebase-9ed5a-default-rtdb.firebaseio.com",
+
+    projectId: "html-css-firebase-9ed5a",
+
+    storageBucket: "html-css-firebase-9ed5a.appspot.com",
+
+    messagingSenderId: "1032850370402",
+
+    appId: "1:1032850370402:web:b3676bba6c53d832dc863b"
+
+  };
+
+
+  // initialize firebase
+  firebase.initializeApp(firebaseConfig);
+
+  // reference your database
+  var contactFormDB = firebase.database().ref("contactForm");
+
+  document.getElementById("contactForm").addEventListener("submit", submitForm);
+
+  function submitForm(e) {
+    e.preventDefault();
+
+    var name = getElementVal("name");
+    var emailid = getElementVal("emailid");
+    var msgContent = getElementVal("msgContent");
+
+    saveMessages(name, emailid, msgContent);
+
+    //   enable alert
+    document.querySelector(".alert").style.display = "block";
+
+    //   remove the alert
+    setTimeout(() => {
+      document.querySelector(".alert").style.display = "none";
+    }, 3000);
+
+    //   reset the form
+    document.getElementById("contactForm").reset();
+  }
+
+  const saveMessages = (name, emailid, msgContent) => {
+    var newContactForm = contactFormDB.push();
+
+    newContactForm.set({
+      name: name,
+      emailid: emailid,
+      msgContent: msgContent,
+    });
+  };
+
+  const getElementVal = (id) => {
+    return document.getElementById(id).value;
+  }; 
+  
+</script>
